@@ -45,9 +45,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    // Garante que a UI nunca trave em "carregando" por mais de 2,5s,
+    // mesmo se o Supabase não responder (rede ruim, sessão corrompida, etc.)
     const hardTimeout = window.setTimeout(() => {
       setLoading(false);
-    }, 4000);
+    }, 2500);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {

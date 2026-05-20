@@ -415,7 +415,7 @@ const NativeCheckoutDialog = ({
   return createPortal(
     <AnimatePresence>
       {open && (
-        <div className="dark fixed inset-0 z-[100] flex items-center justify-center sm:p-4 bg-background">
+        <div className="storefront fixed inset-0 z-[100] flex items-center justify-center sm:p-4 bg-background">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -505,7 +505,7 @@ const NativeCheckoutDialog = ({
                 </div>
                 <div className="flex items-baseline justify-between text-[11px] text-muted-foreground">
                   <span>Frete</span>
-                  <span className={`tabular-nums ${shippingQuote?.isFree ? "text-emerald-400" : "text-foreground/80"}`}>
+                  <span className={`tabular-nums ${shippingQuote?.isFree ? "text-[hsl(var(--success))] font-medium" : "text-foreground/80"}`}>
                     {shippingQuote
                       ? shippingQuote.isFree ? "Grátis ✨" : formatBRL(shippingQuote.cost)
                       : "calcular no CEP"}
