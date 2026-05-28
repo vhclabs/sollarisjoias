@@ -1,10 +1,11 @@
 import { Outlet, NavLink, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, Kanban, BookOpen, Bot, Megaphone, CalendarDays } from "lucide-react";
+import { LayoutDashboard, Users, Kanban, BookOpen, Bot, Megaphone, CalendarDays, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const tabs = [
   { to: "/admin/automacoes", label: "Painel", icon: LayoutDashboard, exact: true },
+  { to: "/admin/automacoes/whatsapp", label: "WhatsApp", icon: MessageSquare },
   { to: "/admin/automacoes/leads", label: "Leads", icon: Users },
   { to: "/admin/automacoes/pipeline", label: "Pipeline", icon: Kanban },
   { to: "/admin/automacoes/conhecimento", label: "Conhecimento", icon: BookOpen },

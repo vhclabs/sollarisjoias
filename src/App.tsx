@@ -52,8 +52,10 @@ import AutomacoesConhecimento from "./pages/admin/automacoes/AutomacoesConhecime
 import AutomacoesIA from "./pages/admin/automacoes/AutomacoesIA";
 import AutomacoesCampanhas from "./pages/admin/automacoes/AutomacoesCampanhas";
 import AutomacoesAgendamentos from "./pages/admin/automacoes/AutomacoesAgendamentos";
+import AutomacoesWhatsApp from "./pages/admin/automacoes/AutomacoesWhatsApp";
 import BrainNalu from "./pages/admin/BrainNalu";
 import AdminEcommerce from "./pages/admin/AdminEcommerce";
+import AdminBanners from "./pages/admin/AdminBanners";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -120,8 +122,10 @@ const App = () => (
                   <Route path="ia" element={<AutomacoesIA />} />
                   <Route path="campanhas" element={<AutomacoesCampanhas />} />
                   <Route path="agendamentos" element={<AutomacoesAgendamentos />} />
+                  <Route path="whatsapp" element={<AutomacoesWhatsApp />} />
                 </Route>
                 <Route path="ecommerce" element={<AdminEcommerce />} />
+                <Route path="banners" element={<AdminBanners />} />
                 <Route path="configuracoes" element={<AdminSettings />} />
                 <Route path="brain-nalu" element={<BrainNalu />} />
               </Route>
