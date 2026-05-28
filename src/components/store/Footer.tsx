@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Instagram, Mail, MapPin, Clock } from "lucide-react";
+import { Instagram, Mail } from "lucide-react";
 import SollarisSeal from "./SollarisSeal";
 
 const Footer = () => {
@@ -69,18 +69,18 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/colecao" className="font-display text-[15px] text-maison-creme/90 hover:text-maison-gold transition-colors">
-                  Heritage
+                <Link to="/colecao?categoria=aneis" className="font-display text-[15px] text-maison-creme/90 hover:text-maison-gold transition-colors">
+                  Anéis
                 </Link>
               </li>
               <li>
-                <Link to="/vitrine" className="font-display text-[15px] text-maison-creme/90 hover:text-maison-gold transition-colors">
-                  Editorial Bordeaux
+                <Link to="/colecao?categoria=colares" className="font-display text-[15px] text-maison-creme/90 hover:text-maison-gold transition-colors">
+                  Colares
                 </Link>
               </li>
               <li>
-                <Link to="/colecao" className="font-display text-[15px] text-maison-creme/90 hover:text-maison-gold transition-colors">
-                  Sollaris Essentials
+                <Link to="/colecao?categoria=brincos" className="font-display text-[15px] text-maison-creme/90 hover:text-maison-gold transition-colors">
+                  Brincos
                 </Link>
               </li>
             </ul>
@@ -115,29 +115,26 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Atelier address */}
+          {/* Contato */}
           <div>
             <p className="font-mono text-[10px] tracking-[0.28em] uppercase text-maison-gold mb-5">
-              Atelier
+              Contato
             </p>
             <ul className="space-y-3.5">
-              <li className="flex items-start gap-2.5">
-                <MapPin className="h-3.5 w-3.5 text-maison-gold flex-shrink-0 mt-1" strokeWidth={1.5} />
-                <span className="font-display text-[14px] text-maison-creme/90 leading-relaxed">
-                  Atendimento online<br />Brasil inteiro
-                </span>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <Clock className="h-3.5 w-3.5 text-maison-gold flex-shrink-0 mt-1" strokeWidth={1.5} />
-                <span className="font-display text-[14px] text-maison-creme/90 leading-relaxed">
-                  Seg–Sex · 11h às 19h<br />com hora marcada
-                </span>
-              </li>
               <li className="flex items-start gap-2.5 min-w-0">
                 <Mail className="h-3.5 w-3.5 text-maison-gold flex-shrink-0 mt-1" strokeWidth={1.5} />
                 <a href="mailto:concierge@sollaris.com" className="font-display text-[14px] text-maison-creme/90 hover:text-maison-gold transition-colors break-all min-w-0">
                   concierge@sollaris.com
                 </a>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => window.dispatchEvent(new CustomEvent("sollaris:open-concierge"))}
+                  className="font-display text-[15px] text-maison-creme/90 hover:text-maison-gold transition-colors text-left"
+                >
+                  Falar no WhatsApp
+                </button>
               </li>
             </ul>
           </div>

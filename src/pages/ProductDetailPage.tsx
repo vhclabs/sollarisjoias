@@ -418,11 +418,10 @@ const ProductInfoTabs = ({ product }: { product: any }) => {
                 <ShieldCheck className="h-4 w-4 text-accent flex-shrink-0 mt-0.5" strokeWidth={1.5} />
                 <div>
                   <p className="font-sans text-[10px] tracking-[0.18em] uppercase text-foreground mb-1">
-                    Garantia SOLLARIS — 1 ano
+                    Garantia SOLLARIS — 1 ano no banho
                   </p>
                   <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-                    Cobrimos defeitos de fabricação no banho e na estrutura. A garantia
-                    não cobre perda de pedrarias por impacto, queda ou mau uso.
+                    Garantia de <strong>1 ano</strong> exclusivamente no <strong>banho (folheado)</strong> e na estrutura da peça. Não cobre perda de pedrarias, pois pedras naturais e sintéticas não têm garantia de fixação vitalícia.
                   </p>
                 </div>
               </div>
@@ -607,15 +606,6 @@ const ProductDetailPage = () => {
 
             {/* Sales triggers — compact horizontal row */}
             <div className="flex flex-wrap items-center gap-1.5 mb-4">
-              {product.stock_quantity != null && product.stock_quantity > 0 && product.stock_quantity <= 3 && (
-                <span className="inline-flex items-center gap-1.5 font-sans text-[9.5px] tracking-[0.1em] uppercase px-2.5 py-1 rounded-full bg-warning/15 text-warning border border-warning/30">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-warning opacity-60" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-warning" />
-                  </span>
-                  {product.stock_quantity === 1 ? "Última peça" : `Restam ${product.stock_quantity}`}
-                </span>
-              )}
               {product.is_featured && (
                 <span className="inline-flex items-center gap-1.5 font-sans text-[9.5px] tracking-[0.1em] uppercase px-2.5 py-1 rounded-full bg-accent/10 text-accent border border-accent/20">
                   <Sparkles className="h-2.5 w-2.5" strokeWidth={2} />
@@ -728,7 +718,7 @@ const ProductDetailPage = () => {
             {/* ─── Trust strip — compact horizontal ─── */}
             <div className="grid grid-cols-3 gap-2 py-3 border-y border-border/40">
               {[
-                { icon: ShieldCheck, label: "Garantia 1 ano" },
+                { icon: ShieldCheck, label: "Garantia 1 ano no banho" },
                 { icon: Truck, label: "Envio rápido" },
                 { icon: RotateCcw, label: "Troca 7 dias" },
               ].map(({ icon: Icon, label }) => (

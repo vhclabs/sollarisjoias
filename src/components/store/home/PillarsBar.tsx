@@ -1,8 +1,8 @@
 // Faixa fina única, estilo Cartier — sem caixinhas, sem ícones grandes
 const items = [
-  "Frete grátis acima de R$ 499",
-  "Garantia vitalícia · Banho 18k",
-  "Troca em 30 dias",
+  "Frete grátis acima de R$ 500",
+  "Garantia 1 ano · Banho 18k",
+  "Troca em 7 dias",
   "Embalagem cortesia",
 ];
 
