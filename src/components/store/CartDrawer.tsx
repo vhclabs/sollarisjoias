@@ -38,7 +38,11 @@ const CartDrawer = () => {
     const whatsappNumber = "5512991895250";
 
     const lines = items.map(
-      (item, i) => `${i + 1}. ${item.name}\n   Qtd: ${item.quantity} | Unit: ${formatPrice(item.price)} | Subtotal: ${formatPrice(item.price * item.quantity)}`
+      (item, i) => {
+        const variation = [item.size, item.color].filter(Boolean).join(" | ");
+        const nameWithVariation = variation ? `${item.name} (${variation})` : item.name;
+        return `${i + 1}. ${nameWithVariation}\n   Qtd: ${item.quantity} | Unit: ${formatPrice(item.price)} | Subtotal: ${formatPrice(item.price * item.quantity)}`;
+      }
     );
 
     const message = [
@@ -103,7 +107,7 @@ const CartDrawer = () => {
                 </div>
               ) : (
                 items.map((item) => (
-                  <div key={item.id} className="flex gap-3 sm:gap-4">
+                  <div key={item.cartItemId} className="flex gap-3 sm:gap-4">
                     {item.image ? (
                       <img
                         src={item.image}
@@ -115,25 +119,30 @@ const CartDrawer = () => {
                     )}
                     <div className="flex-1 min-w-0 py-0.5">
                       <p className="font-sans text-sm text-foreground truncate">{item.name}</p>
+                      {(item.size || item.color) && (
+                        <p className="font-sans text-[10px] text-muted-foreground mt-0.5">
+                          {[item.size && `Tam: ${item.size}`, item.color && `Cor: ${item.color}`].filter(Boolean).join(' | ')}
+                        </p>
+                      )}
                       <p className="font-sans text-sm text-accent mt-1">
                         {formatPrice(item.price)}
                       </p>
                       <div className="flex items-center gap-0 mt-2">
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
                           className="p-2 text-muted-foreground hover:text-foreground active:scale-90 transition-all"
                         >
                           <Minus className="h-3.5 w-3.5" />
                         </button>
                         <span className="font-sans text-xs w-6 text-center">{item.quantity}</span>
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
                           className="p-2 text-muted-foreground hover:text-foreground active:scale-90 transition-all"
                         >
                           <Plus className="h-3.5 w-3.5" />
                         </button>
                         <button
-                          onClick={() => removeItem(item.id)}
+                          onClick={() => removeItem(item.cartItemId)}
                           className="ml-auto p-2 text-muted-foreground hover:text-destructive active:scale-90 transition-all"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
