@@ -3,17 +3,20 @@ import { syncCart, trackEvent } from "@/lib/analytics";
 
 interface CartItem {
   id: string;
+  cartItemId: string;
   name: string;
   price: number;
   image: string | null;
   quantity: number;
+  size?: string | null;
+  color?: string | null;
 }
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (item: Omit<CartItem, "quantity">) => void;
-  removeItem: (id: string) => void;
-  updateQuantity: (id: string, quantity: number) => void;
+  addItem: (item: Omit<CartItem, "quantity" | "cartItemId">) => void;
+  removeItem: (cartItemId: string) => void;
+  updateQuantity: (cartItemId: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -39,25 +42,26 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     return () => clearTimeout(t);
   }, [items]);
 
-  const addItem = (item: Omit<CartItem, "quantity">) => {
+  const addItem = (item: Omit<CartItem, "quantity" | "cartItemId">) => {
     setItems((prev) => {
-      const existing = prev.find((i) => i.id === item.id);
+      const existing = prev.find((i) => i.id === item.id && i.size === item.size && i.color === item.color);
       if (existing) {
-        return prev.map((i) => (i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i));
+        return prev.map((i) => (i.cartItemId === existing.cartItemId ? { ...i, quantity: i.quantity + 1 } : i));
       }
-      return [...prev, { ...item, quantity: 1 }];
+      const cartItemId = `${item.id}-${item.size || 'none'}-${item.color || 'none'}`;
+      return [...prev, { ...item, cartItemId, quantity: 1 }];
     });
     setIsOpen(true);
     trackEvent("add_to_cart", {
       productId: item.id,
       productName: item.name,
-      metadata: { price: item.price },
+      metadata: { price: item.price, size: item.size, color: item.color },
     }).catch(() => {});
   };
 
-  const removeItem = (id: string) => {
-    const removed = items.find((i) => i.id === id);
-    setItems((prev) => prev.filter((i) => i.id !== id));
+  const removeItem = (cartItemId: string) => {
+    const removed = items.find((i) => i.cartItemId === cartItemId);
+    setItems((prev) => prev.filter((i) => i.cartItemId !== cartItemId));
     if (removed) {
       trackEvent("remove_from_cart", {
         productId: removed.id,
@@ -66,9 +70,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const updateQuantity = (id: string, quantity: number) => {
-    if (quantity <= 0) return removeItem(id);
-    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, quantity } : i)));
+  const updateQuantity = (cartItemId: string, quantity: number) => {
+    if (quantity <= 0) return removeItem(cartItemId);
+    setItems((prev) => prev.map((i) => (i.cartItemId === cartItemId ? { ...i, quantity } : i)));
   };
 
   const clearCart = () => {

@@ -328,7 +328,7 @@ const ProductInfoTabs = ({ product }: { product: any }) => {
         >
           {active === "desc" && (
             <div className="space-y-4">
-              <p className="font-sans text-sm md:text-base text-muted-foreground leading-relaxed">
+              <p className="font-sans text-sm md:text-base text-muted-foreground leading-relaxed whitespace-pre-line">
                 {product.description ||
                   "Cada peça SOLLARIS é selecionada com intenção. Curadoria silenciosa, design atemporal e acabamento que resiste ao tempo — para mulheres que escolhem com propósito."}
               </p>
@@ -421,7 +421,7 @@ const ProductInfoTabs = ({ product }: { product: any }) => {
                     Garantia SOLLARIS — 1 ano no banho
                   </p>
                   <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-                    Garantia de <strong>1 ano</strong> exclusivamente no <strong>banho (folheado)</strong> e na estrutura da peça. Não cobre perda de pedrarias, pois pedras naturais e sintéticas não têm garantia de fixação vitalícia.
+                    Garantia de <strong>1 ano</strong> exclusivamente no <strong>banho (folheado)</strong> e na estrutura da peça. Não cobre perda de pedrarias, pois pedras naturais e sintéticas não possuem garantia de fixação.
                   </p>
                 </div>
               </div>
@@ -439,6 +439,8 @@ const ProductDetailPage = () => {
   const { data: featuredProducts } = useFeaturedProducts();
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
 
@@ -515,12 +517,22 @@ const ProductDetailPage = () => {
   ].filter((d) => d.value);
 
   const handleAddToCart = () => {
+    if (product.sizes?.length > 0 && !selectedSize) {
+      toast.error("Por favor, selecione um tamanho");
+      return;
+    }
+    if (product.colors?.length > 0 && !selectedColor) {
+      toast.error("Por favor, selecione uma cor");
+      return;
+    }
     for (let i = 0; i < quantity; i++) {
       addItem({
         id: product.id,
         name: product.name,
         price: product.price,
         image: images[0] || null,
+        size: selectedSize,
+        color: selectedColor,
       });
     }
     setAddedToCart(true);
@@ -647,6 +659,54 @@ const ProductDetailPage = () => {
                 </p>
               </div>
             </div>
+
+            {/* Variations (Size/Color) */}
+            {(product.sizes?.length > 0 || product.colors?.length > 0) && (
+              <div className="space-y-4 mb-5">
+                {product.sizes?.length > 0 && (
+                  <div>
+                    <span className="font-sans text-[10px] tracking-[0.18em] uppercase text-muted-foreground block mb-2">
+                      Tamanho
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {product.sizes.map((size: string) => (
+                        <button
+                          key={size}
+                          onClick={() => setSelectedSize(size)}
+                          className={cn(
+                            "px-3 py-1.5 border text-xs font-sans rounded-full transition-colors",
+                            selectedSize === size ? "border-accent bg-accent/10 text-accent" : "border-border text-muted-foreground hover:border-accent/40"
+                          )}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {product.colors?.length > 0 && (
+                  <div>
+                    <span className="font-sans text-[10px] tracking-[0.18em] uppercase text-muted-foreground block mb-2">
+                      Cor
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {product.colors.map((color: string) => (
+                        <button
+                          key={color}
+                          onClick={() => setSelectedColor(color)}
+                          className={cn(
+                            "px-3 py-1.5 border text-xs font-sans rounded-full transition-colors",
+                            selectedColor === color ? "border-accent bg-accent/10 text-accent" : "border-border text-muted-foreground hover:border-accent/40"
+                          )}
+                        >
+                          {color}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Quantity + CTAs */}
             <div className="space-y-2.5 mb-5">
