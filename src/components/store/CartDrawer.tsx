@@ -219,6 +219,8 @@ const CartDrawer = () => {
                   quantity: i.quantity,
                   price: i.price,
                   image: i.image,
+                  size: i.size,
+                  color: i.color,
                 })),
                 total: orderTotal,
                 payment_method: customer.paymentMethod,

@@ -29,7 +29,18 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>(() => {
     const saved = localStorage.getItem("sollaris-cart");
-    return saved ? JSON.parse(saved) : [];
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.map((item: any) => ({
+          ...item,
+          cartItemId: item.cartItemId || `${item.id}-${item.size || 'none'}-${item.color || 'none'}`
+        }));
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
   });
   const [isOpen, setIsOpen] = useState(false);
 
