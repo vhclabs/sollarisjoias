@@ -1,6 +1,6 @@
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { useCategories, useSettings } from "@/hooks/useStore";
+import { useCategories, useSettings, hasProductPhoto } from "@/hooks/useStore";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import ProductCard from "@/components/store/ProductCard";
@@ -137,12 +137,6 @@ const CollectionPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialCat = searchParams.get("categoria") || searchParams.get("cat") || "";
   const [activeCategory, setActiveCategory] = useState(initialCat);
-
-  // Sync activeCategory when URL searchParams change (e.g. navigating from CategoryStrip)
-  useEffect(() => {
-    const cat = searchParams.get("categoria") || searchParams.get("cat") || "";
-    setActiveCategory(cat);
-  }, [searchParams]);
   const [priceRange, setPriceRange] = useState(0);
   const [sortBy, setSortBy] = useState("recent");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -168,7 +162,7 @@ const CollectionPage = () => {
   // Derived: filter + sort
   const filtered = useMemo(() => {
     if (!allProducts) return [];
-    let result = [...allProducts];
+    let result = allProducts.filter((p: any) => hasProductPhoto(p));
 
     // Category filter
     if (activeCategory) {

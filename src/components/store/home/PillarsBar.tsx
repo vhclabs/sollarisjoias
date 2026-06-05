@@ -1,12 +1,9 @@
-// Faixa fina única, estilo Cartier — sem caixinhas, sem ícones grandes
-const items = [
-  "Frete grátis acima de R$ 500",
-  "Garantia 1 ano · Banho 18k",
-  "Troca em 7 dias",
-  "Embalagem cortesia",
-];
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const PillarsBar = () => {
+  const { get } = useSiteContent();
+  const { items } = get("pillars");
+
   return (
     <section className="bg-bordeaux/[0.04] border-y border-bordeaux/10">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-10 py-4 sm:py-5">

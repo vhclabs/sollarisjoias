@@ -1,11 +1,14 @@
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 interface Props {
   onOpenChat: () => void;
 }
 
 const ConciergeCTA = ({ onOpenChat }: Props) => {
+  const { get } = useSiteContent();
+  const c = get("concierge");
   return (
     <section className="bg-gradient-to-br from-bordeaux via-[#4a151a] to-[#2a0c10] text-maison-creme relative overflow-hidden">
       {/* Decorative gold lines */}
@@ -28,14 +31,13 @@ const ConciergeCTA = ({ onOpenChat }: Props) => {
 
           <div className="text-center md:text-left">
             <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-champagne mb-3">
-              Atendimento personalizado
+              {c.eyebrow}
             </p>
             <h2 className="font-display text-[28px] sm:text-[42px] leading-[1.05] mb-3">
-              Fale com nossa <span className="italic text-champagne">consultora</span>
+              {c.title} <span className="italic text-champagne">{c.title_emphasis}</span>
             </h2>
-            <p className="font-sans text-[14px] sm:text-[15px] text-maison-creme/80 leading-relaxed max-w-md mx-auto md:mx-0">
-              Conte a ocasião, o estilo, o orçamento — e a Sollaris monta uma
-              seleção sob medida pra você. Conversa, escolha e fechamento, tudo aqui.
+            <p className="font-sans text-[14px] sm:text-[15px] text-maison-creme/80 leading-relaxed max-w-md mx-auto md:mx-0 whitespace-pre-line">
+              {c.subtitle}
             </p>
           </div>
 
@@ -43,7 +45,7 @@ const ConciergeCTA = ({ onOpenChat }: Props) => {
             onClick={onOpenChat}
             className="group relative inline-flex items-center gap-3 px-7 py-4 bg-champagne text-bordeaux hover:bg-maison-creme transition-all duration-300 font-mono text-[11px] uppercase tracking-[0.28em] whitespace-nowrap mx-auto md:mx-0"
           >
-            Iniciar conversa
+            {c.cta_label}
             <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
           </button>
         </div>

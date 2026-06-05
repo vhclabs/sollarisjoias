@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.1"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -199,6 +199,110 @@ export type Database = {
           visitor_id?: string | null
         }
         Relationships: []
+      }
+      blog_categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      blog_posts: {
+        Row: {
+          author_id: string | null
+          author_name: string | null
+          category_id: string | null
+          content: string
+          cover_image: string | null
+          created_at: string
+          id: string
+          is_featured: boolean
+          lead: string | null
+          og_image: string | null
+          published_at: string | null
+          reading_time_minutes: number | null
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          status: string
+          subtitle: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+          views_count: number
+        }
+        Insert: {
+          author_id?: string | null
+          author_name?: string | null
+          category_id?: string | null
+          content?: string
+          cover_image?: string | null
+          created_at?: string
+          id?: string
+          is_featured?: boolean
+          lead?: string | null
+          og_image?: string | null
+          published_at?: string | null
+          reading_time_minutes?: number | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          status?: string
+          subtitle?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          views_count?: number
+        }
+        Update: {
+          author_id?: string | null
+          author_name?: string | null
+          category_id?: string | null
+          content?: string
+          cover_image?: string | null
+          created_at?: string
+          id?: string
+          is_featured?: boolean
+          lead?: string | null
+          og_image?: string | null
+          published_at?: string | null
+          reading_time_minutes?: number | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          status?: string
+          subtitle?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          views_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_posts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "blog_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       brain_conversations: {
         Row: {
@@ -1372,6 +1476,9 @@ export type Database = {
       }
       settings: {
         Row: {
+          auto_billing_enabled: boolean
+          auto_billing_tone: string
+          auto_billing_upsell: boolean
           bank_balance: number | null
           created_at: string
           evolution_instance: string | null
@@ -1383,6 +1490,9 @@ export type Database = {
           whatsapp_number: string
         }
         Insert: {
+          auto_billing_enabled?: boolean
+          auto_billing_tone?: string
+          auto_billing_upsell?: boolean
           bank_balance?: number | null
           created_at?: string
           evolution_instance?: string | null
@@ -1394,6 +1504,9 @@ export type Database = {
           whatsapp_number?: string
         }
         Update: {
+          auto_billing_enabled?: boolean
+          auto_billing_tone?: string
+          auto_billing_upsell?: boolean
           bank_balance?: number | null
           created_at?: string
           evolution_instance?: string | null
@@ -1403,6 +1516,24 @@ export type Database = {
           store_name?: string
           updated_at?: string
           whatsapp_number?: string
+        }
+        Relationships: []
+      }
+      site_content: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
         }
         Relationships: []
       }
@@ -1797,6 +1928,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_blog_post_views: { Args: { _slug: string }; Returns: undefined }
       link_session_to_user: {
         Args: { _session_id: string }
         Returns: undefined

@@ -187,7 +187,7 @@ Meça o diâmetro interno do anel em mm e compare com a tabela.
 **TROCA**
 - Mesmo prazo de 7 dias e condições
 - Troca por outro modelo: diferença de valor cobrada ou devolvida conforme o caso
-- Troca de tamanho de anel/aliança: gratuita na primeira vez, dentro de 7 dias da compra
+- Troca de tamanho de anel/aliança: gratuita na primeira vez, dentro de 30 dias da compra
 
 **GARANTIA DE QUALIDADE — 12 MESES**
 Cobre:
@@ -256,7 +256,7 @@ Como descobrir meu número de anel?
 Enrole um papel fino confortavelmente no dedo, marque onde se fecha, meça o comprimento em mm e divida por 3,14. Compare com nossa tabela de numeração.
 
 Posso presentear sem saber o tamanho?
-Sim! Recomendamos consultoria prévia. Caso não seja possível, realizamos ajuste gratuito na primeira vez dentro de 7 dias.
+Sim! Recomendamos consultoria prévia. Caso não seja possível, realizamos ajuste gratuito na primeira vez dentro de 30 dias.
 
 **PAGAMENTO**
 

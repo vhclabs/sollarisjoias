@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { hasProductPhoto } from "@/hooks/useStore";
 import { motion } from "framer-motion";
 
 // Ordem editorial fixa (categorias âncora primeiro)
-const ORDER = ["aneis", "brincos", "colares", "choker", "pulseiras", "tornozeleiras"];
+const ORDER = ["aneis", "brincos", "colares", "pulseiras"];
+const HIDDEN_CATEGORIES = ["choker", "tornozeleiras"];
 
 interface CategoryCard {
   slug: string;
@@ -25,7 +27,7 @@ const useCategoriesWithImages = () =>
         .eq("stock_status", true)
         .gt("stock_quantity", 0);
       const byCat = new Map<string, { image: string | null; count: number }>();
-      (prods || []).forEach((p: any) => {
+      (prods || []).filter(hasProductPhoto).forEach((p: any) => {
         const cur = byCat.get(p.category_id) || { image: null, count: 0 };
         cur.count += 1;
         if (!cur.image) cur.image = p.foto_frontal || p.images?.[0] || null;
@@ -71,7 +73,7 @@ const CategoryStrip = () => {
         {/* Carrossel horizontal premium */}
         <div className="-mx-6 sm:-mx-10 px-6 sm:px-10 overflow-x-auto scrollbar-hide">
           <div className="flex gap-3 sm:gap-5 pb-2">
-            {(isLoading ? Array(6).fill(null) : categories).map((cat: CategoryCard | null, i: number) => (
+            {(isLoading ? Array(4).fill(null) : categories.filter(c => !HIDDEN_CATEGORIES.includes(c.slug))).map((cat: CategoryCard | null, i: number) => (
               <motion.div
                 key={cat?.slug || i}
                 initial={{ opacity: 0, y: 12 }}

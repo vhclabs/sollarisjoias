@@ -21,6 +21,7 @@ const navLinks = [
   { to: "/colecao?categoria=colares", label: "Colares" },
   { to: "/colecao?categoria=brincos", label: "Brincos" },
   { to: "/colecao?categoria=pulseiras", label: "Pulseiras" },
+  { to: "/blog", label: "Blog" },
   { to: "/sobre", label: "A Sollaris" },
 ];
 

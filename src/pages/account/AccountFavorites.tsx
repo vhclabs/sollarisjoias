@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { hasProductPhoto } from "@/hooks/useStore";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import ProductCard from "@/components/store/ProductCard";
 import { Heart } from "lucide-react";
@@ -23,7 +24,7 @@ const AccountFavorites = () => {
         .from("products")
         .select("id, name, price, original_price, foto_frontal, images, category_id, stock_quantity, created_at, categories(name)")
         .in("id", ids);
-      setProducts(data ?? []);
+      setProducts((data ?? []).filter(hasProductPhoto));
       setLoading(false);
     };
     void load();

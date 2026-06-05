@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   CreditCard, AlertTriangle, TrendingUp, Wallet, Search, Phone,
-  CheckCircle2, Clock, Shield, ShieldOff, Edit3,
+  CheckCircle2, Clock, Shield, ShieldOff, Edit3, Sparkles, Bot, Loader2,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader } from "@/components/admin/ui/PageHeader";
@@ -76,10 +76,14 @@ const AdminCrediario = () => {
   const [editing, setEditing] = useState<CrediarioCustomer | null>(null);
   const [editLimit, setEditLimit] = useState("");
   const [editBlocked, setEditBlocked] = useState(false);
+  const [autoBilling, setAutoBilling] = useState(false);
+  const [autoBillingUpsell, setAutoBillingUpsell] = useState(true);
+  const [sendingId, setSendingId] = useState<string | null>(null);
+  const [batchSending, setBatchSending] = useState(false);
 
   const loadAll = async () => {
     setLoading(true);
-    const [{ data: cust }, { data: inst }] = await Promise.all([
+    const [{ data: cust }, { data: inst }, { data: cfg }] = await Promise.all([
       supabase
         .from("crediario_summary" as any)
         .select("*")
@@ -90,15 +94,83 @@ const AdminCrediario = () => {
         .eq("sub_type", "crediario")
         .eq("status", "pending")
         .order("due_date", { ascending: true }),
+      supabase
+        .from("settings")
+        .select("auto_billing_enabled, auto_billing_upsell")
+        .limit(1)
+        .maybeSingle(),
     ]);
     setCustomers((cust as any) || []);
     setInstallments((inst as any) || []);
+    if (cfg) {
+      setAutoBilling(!!(cfg as any).auto_billing_enabled);
+      setAutoBillingUpsell((cfg as any).auto_billing_upsell !== false);
+    }
     setLoading(false);
   };
 
   useEffect(() => {
     loadAll();
   }, []);
+
+  const toggleAutoBilling = async (next: boolean) => {
+    setAutoBilling(next);
+    const { data: existing } = await supabase.from("settings").select("id").limit(1).maybeSingle();
+    if (existing?.id) {
+      await supabase.from("settings").update({ auto_billing_enabled: next }).eq("id", existing.id);
+    } else {
+      await supabase.from("settings").insert({ auto_billing_enabled: next, whatsapp_number: "" });
+    }
+    toast.success(next ? "Cobrança automática ativada" : "Cobrança automática desativada");
+  };
+
+  const toggleUpsell = async (next: boolean) => {
+    setAutoBillingUpsell(next);
+    const { data: existing } = await supabase.from("settings").select("id").limit(1).maybeSingle();
+    if (existing?.id) {
+      await supabase.from("settings").update({ auto_billing_upsell: next }).eq("id", existing.id);
+    }
+  };
+
+  const sendIaCharge = async (installmentId: string) => {
+    setSendingId(installmentId);
+    try {
+      const { data, error } = await supabase.functions.invoke("crediario-cobranca-ia", {
+        body: { installmentId },
+      });
+      if (error) throw error;
+      const res = (data as any)?.results?.[0];
+      if (res?.ok) toast.success("Cobrança IA enviada com upsell ✨");
+      else if (res?.skipped) toast.info(`Pulado: ${res.skipped}`);
+      else toast.error(res?.error || "Falha ao enviar");
+    } catch (e: any) {
+      toast.error(e.message ?? "Erro");
+    } finally {
+      setSendingId(null);
+    }
+  };
+
+  const sendIaChargeBatch = async () => {
+    const overdueIds = installments
+      .filter((i) => i.due_date && differenceInDays(new Date(), parseISO(i.due_date)) > 0 && i.customer_phone)
+      .map((i) => i.id);
+    if (overdueIds.length === 0) return toast.info("Nenhuma parcela vencida com telefone");
+    if (!confirm(`Disparar cobrança IA para ${overdueIds.length} parcela(s) vencidas?`)) return;
+    setBatchSending(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("crediario-cobranca-ia", {
+        body: { installmentIds: overdueIds },
+      });
+      if (error) throw error;
+      const results = (data as any)?.results || [];
+      const ok = results.filter((r: any) => r.ok).length;
+      toast.success(`${ok}/${results.length} cobranças enviadas`);
+    } catch (e: any) {
+      toast.error(e.message ?? "Erro");
+    } finally {
+      setBatchSending(false);
+    }
+  };
 
   const kpis = useMemo(() => {
     const totalReceber = customers.reduce((s, c) => s + Number(c.total_owed || 0), 0);
@@ -219,6 +291,68 @@ const AdminCrediario = () => {
           format={fmtBRL}
         />
       </div>
+
+      {/* Cobrança automática IA */}
+      <motion.div variants={staggerItem} className="admin-card p-4">
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div className="flex items-start gap-3 min-w-0">
+            <div className="h-9 w-9 rounded-md bg-accent/15 border border-accent/30 flex items-center justify-center shrink-0">
+              <Bot className="h-4 w-4 text-accent" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[13px] font-semibold text-foreground flex items-center gap-2">
+                Cobrança automática com IA
+                <Sparkles className="h-3 w-3 text-accent" />
+              </p>
+              <p className="text-[11px] text-muted-foreground mt-0.5 max-w-2xl">
+                Conectada à instância Evolution configurada em Configurações. A IA escreve
+                uma mensagem ultra-amigável de lembrete e, opcionalmente, sugere uma peça em
+                destaque para upsell sutil. Use o botão "IA" em cada parcela ou dispare em lote.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <label className="flex items-center gap-2 text-[11px] text-muted-foreground">
+              <input
+                type="checkbox"
+                checked={autoBillingUpsell}
+                onChange={(e) => toggleUpsell(e.target.checked)}
+                className="accent-[hsl(var(--accent))]"
+              />
+              Upsell
+            </label>
+            <button
+              onClick={() => toggleAutoBilling(!autoBilling)}
+              className={cn(
+                "h-6 w-11 rounded-full relative transition-colors",
+                autoBilling ? "bg-accent" : "bg-muted"
+              )}
+              title={autoBilling ? "Desativar" : "Ativar"}
+            >
+              <span
+                className={cn(
+                  "absolute top-0.5 h-5 w-5 rounded-full bg-card shadow-notion-sm transition-transform",
+                  autoBilling ? "translate-x-5" : "translate-x-0.5"
+                )}
+              />
+            </button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={sendIaChargeBatch}
+              disabled={batchSending}
+              className="h-7 text-[11px]"
+            >
+              {batchSending ? (
+                <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+              ) : (
+                <Sparkles className="h-3 w-3 mr-1" />
+              )}
+              Disparar vencidas
+            </Button>
+          </div>
+        </div>
+      </motion.div>
 
       {/* Search */}
       <motion.div variants={staggerItem} className="relative max-w-md">
@@ -422,15 +556,32 @@ const AdminCrediario = () => {
                         <td className="text-right">
                           <div className="flex items-center justify-end gap-1">
                             {i.customer_phone && (
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => sendWhatsApp(i.customer_phone, i.customer_name, Number(i.amount), i.due_date)}
-                                className="h-7 px-2 text-[11px]"
-                              >
-                                <Phone className="h-3 w-3 mr-1" />
-                                Cobrar
-                              </Button>
+                              <>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => sendIaCharge(i.id)}
+                                  disabled={sendingId === i.id}
+                                  className="h-7 px-2 text-[11px] text-accent hover:text-accent"
+                                  title="Enviar cobrança gerada pela IA via WhatsApp"
+                                >
+                                  {sendingId === i.id ? (
+                                    <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                  ) : (
+                                    <Sparkles className="h-3 w-3 mr-1" />
+                                  )}
+                                  IA
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => sendWhatsApp(i.customer_phone, i.customer_name, Number(i.amount), i.due_date)}
+                                  className="h-7 px-2 text-[11px]"
+                                >
+                                  <Phone className="h-3 w-3 mr-1" />
+                                  Cobrar
+                                </Button>
+                              </>
                             )}
                             <Button
                               size="sm"
