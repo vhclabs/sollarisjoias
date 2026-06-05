@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import lookbookImg from "@/assets/lookbook-1.jpg";
+import lookbookImg from "@/assets/uploads/Gold_earrings_on_paper_background_63775454bb.jpeg";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
 const EditorialBlock = () => {
