@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { hasProductPhoto } from "@/hooks/useStore";
 import ProductCard from "@/components/store/ProductCard";
 import { Search } from "lucide-react";
 
@@ -24,7 +25,7 @@ const SearchPage = () => {
         .select("id, name, price, original_price, foto_frontal, images, stock_quantity, created_at, banho, material, pedra, categories(name)")
         .or(`name.ilike.%${q}%,description.ilike.%${q}%,tags_seo.ilike.%${q}%,banho.ilike.%${q}%,material.ilike.%${q}%,pedra.ilike.%${q}%`)
         .limit(60);
-      setResults(data ?? []);
+      setResults((data ?? []).filter(hasProductPhoto));
       setLoading(false);
     };
     void run();

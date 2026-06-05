@@ -4,11 +4,12 @@ import FeaturedGrid from "@/components/store/home/FeaturedGrid";
 import PillarsBar from "@/components/store/home/PillarsBar";
 import EditorialBlock from "@/components/store/home/EditorialBlock";
 import NewsletterBlock from "@/components/store/home/NewsletterBlock";
-import ConciergeCTA from "@/components/store/home/ConciergeCTA";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const HomePage = () => {
-  const openConcierge = () =>
-    window.dispatchEvent(new CustomEvent("sollaris:open-concierge"));
+  const { get } = useSiteContent();
+  const main = get("featured_main");
+  const news = get("featured_news");
 
   return (
     <>
@@ -16,17 +17,17 @@ const HomePage = () => {
       <PillarsBar />
       <CategoryStrip />
       <FeaturedGrid
-        eyebrow="Mais desejadas"
-        title="Selecionadas pra você"
-        subtitle="As peças que mais saem da casa este mês — escolhidas a dedo pela curadoria."
+        eyebrow={main.eyebrow}
+        title={main.title}
+        subtitle={main.subtitle}
         featuredOnly
         limit={8}
       />
-      <ConciergeCTA onOpenChat={openConcierge} />
       <EditorialBlock />
       <FeaturedGrid
-        eyebrow="Acabou de chegar"
-        title="Novidades"
+        eyebrow={news.eyebrow}
+        title={news.title}
+        subtitle={news.subtitle}
         featuredOnly={false}
         limit={4}
         showSeeAll={false}

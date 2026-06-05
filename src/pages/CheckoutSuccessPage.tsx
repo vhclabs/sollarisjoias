@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
+import { hasProductPhoto } from "@/hooks/useStore";
 import { toast } from "sonner";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -108,8 +109,8 @@ const CheckoutSuccessPage = () => {
         .order("created_at", { ascending: false })
         .limit(8);
       if (data) {
-        // Pega 4 aleatórios dos 8 mais featured/recentes
-        const shuffled = [...data].sort(() => Math.random() - 0.5).slice(0, 4);
+        const withPhoto = data.filter(hasProductPhoto);
+        const shuffled = [...withPhoto].sort(() => Math.random() - 0.5).slice(0, 4);
         setRelated(shuffled);
       }
     })();

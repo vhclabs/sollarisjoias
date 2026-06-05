@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Package, FolderOpen, Settings, LogOut, ShoppingCart,
   Mail, Menu, X, Users, DollarSign, ListTodo, StickyNote, Truck, Ticket,
   ChevronLeft, Store, Megaphone, Zap, Briefcase, Boxes, Wallet, CreditCard,
-  Globe, Image,
+  Globe, BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -69,7 +69,7 @@ const hubs: {
     colorVar: "var(--hub-ecommerce)",
     items: [
       { to: "/admin/ecommerce", icon: Store, label: "Painel do Site" },
-      { to: "/admin/banners", icon: Image, label: "Banners" },
+      { to: "/admin/editorial", icon: BookOpen, label: "Editorial" },
     ],
   },
 ];

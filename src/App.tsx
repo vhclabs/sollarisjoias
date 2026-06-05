@@ -25,6 +25,10 @@ import SearchPage from "@/pages/SearchPage";
 import CheckoutSuccessPage from "@/pages/CheckoutSuccessPage";
 import CheckoutPendingPage from "@/pages/CheckoutPendingPage";
 import CheckoutFailurePage from "@/pages/CheckoutFailurePage";
+import BlogPage from "@/pages/BlogPage";
+import BlogPostPage from "@/pages/BlogPostPage";
+import AdminEditorial from "@/pages/admin/AdminEditorial";
+import AdminEditorialEdit from "@/pages/admin/AdminEditorialEdit";
 
 // Admin pages
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -52,10 +56,8 @@ import AutomacoesConhecimento from "./pages/admin/automacoes/AutomacoesConhecime
 import AutomacoesIA from "./pages/admin/automacoes/AutomacoesIA";
 import AutomacoesCampanhas from "./pages/admin/automacoes/AutomacoesCampanhas";
 import AutomacoesAgendamentos from "./pages/admin/automacoes/AutomacoesAgendamentos";
-import AutomacoesWhatsApp from "./pages/admin/automacoes/AutomacoesWhatsApp";
 import BrainNalu from "./pages/admin/BrainNalu";
 import AdminEcommerce from "./pages/admin/AdminEcommerce";
-import AdminBanners from "./pages/admin/AdminBanners";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -77,6 +79,8 @@ const App = () => (
                 <Route path="/produto/:id" element={<ProductDetailPage />} />
                 <Route path="/sobre" element={<AboutPage />} />
                 <Route path="/vitrine" element={<LookbookPage />} />
+                <Route path="/blog" element={<BlogPage />} />
+                <Route path="/blog/:slug" element={<BlogPostPage />} />
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/buscar" element={<SearchPage />} />
                 <Route
@@ -122,10 +126,11 @@ const App = () => (
                   <Route path="ia" element={<AutomacoesIA />} />
                   <Route path="campanhas" element={<AutomacoesCampanhas />} />
                   <Route path="agendamentos" element={<AutomacoesAgendamentos />} />
-                  <Route path="whatsapp" element={<AutomacoesWhatsApp />} />
                 </Route>
                 <Route path="ecommerce" element={<AdminEcommerce />} />
-                <Route path="banners" element={<AdminBanners />} />
+                <Route path="editorial" element={<AdminEditorial />} />
+                <Route path="editorial/new" element={<AdminEditorialEdit />} />
+                <Route path="editorial/:id" element={<AdminEditorialEdit />} />
                 <Route path="configuracoes" element={<AdminSettings />} />
                 <Route path="brain-nalu" element={<BrainNalu />} />
               </Route>

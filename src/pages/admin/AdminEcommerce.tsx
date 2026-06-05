@@ -11,9 +11,10 @@ import {
   Globe, Star, Package, ImageIcon, Search, AlertTriangle,
   CheckCircle2, ExternalLink, Wand2, Loader2, RefreshCw,
   LayoutGrid, Eye, TrendingUp, ShoppingCart, FolderOpen,
-  ArrowUpRight, Sparkles, Image, ShieldCheck, Activity,
+  ArrowUpRight, Sparkles, Image, ShieldCheck, Activity, Type,
 } from "lucide-react";
 import LiveSiteDashboard from "@/components/admin/ecommerce/LiveSiteDashboard";
+import SiteContentEditor from "@/components/admin/ecommerce/SiteContentEditor";
 
 /* ─── helpers ─── */
 const fmt = (v: number) =>
@@ -208,6 +209,9 @@ const AdminEcommerce = () => {
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
             </span>
           </TabsTrigger>
+          <TabsTrigger value="textos" className="text-xs gap-1.5 h-8">
+            <Type className="h-3 w-3" />Legendas, banners e textos
+          </TabsTrigger>
           <TabsTrigger value="painel" className="text-xs gap-1.5 h-8">
             <LayoutGrid className="h-3 w-3" />Catálogo
           </TabsTrigger>
@@ -233,6 +237,11 @@ const AdminEcommerce = () => {
         {/* ════ PAINEL SITE (LIVE) ════ */}
         <TabsContent value="painel-site" className="mt-4">
           <LiveSiteDashboard />
+        </TabsContent>
+
+        {/* ════ TEXTOS DO SITE ════ */}
+        <TabsContent value="textos" className="mt-4">
+          <SiteContentEditor />
         </TabsContent>
 
         {/* ════ PAINEL ════ */}
