@@ -3,8 +3,6 @@ import CategoryStrip from "@/components/store/home/CategoryStrip";
 import FeaturedGrid from "@/components/store/home/FeaturedGrid";
 import PillarsBar from "@/components/store/home/PillarsBar";
 import EditorialBlock from "@/components/store/home/EditorialBlock";
-import LookbookStrip from "@/components/store/home/LookbookStrip";
-import BlogPreview from "@/components/store/home/BlogPreview";
 import NewsletterBlock from "@/components/store/home/NewsletterBlock";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
@@ -25,7 +23,6 @@ const HomePage = () => {
         featuredOnly
         limit={8}
       />
-      <LookbookStrip />
       <EditorialBlock />
       <FeaturedGrid
         eyebrow={news.eyebrow}
@@ -35,7 +32,6 @@ const HomePage = () => {
         limit={4}
         showSeeAll={false}
       />
-      <BlogPreview />
       <NewsletterBlock />
     </>
   );
